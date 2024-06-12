@@ -1,7 +1,7 @@
 import socket
 import time
 
-IP = "192.168.147.119"
+IP = "192.168.64.119"
 PORT = 8000
 
 class QRcodeScanControl:
@@ -37,7 +37,7 @@ class QRcodeScanControl:
     def send_signal(self, command_type, signal):
         try:
             self.connect_socket()
-            request = f"GET /command?{command_type}={signal} HTTP/1.1\r\nHost: {self.esp32_ip}\r\n\r\n"
+            request = f"GET /?{command_type}={signal} HTTP/1.1\r\nHost: {self.esp32_ip}\r\n\r\n"
             self.sock.sendall(request.encode())
             response = self.sock.recv(4096)
             print(f"Received from ESP32: {response.decode()}")
@@ -100,14 +100,14 @@ class QRcodeScanControl:
         self.get_path_settings()
         self.calculate_path()
 
-        self.send_action_signal(1)      # start car
+        #self.send_action_signal(1)      # start car
 
         while True:
             arrive = input()
             print("arrive", arrive)
             if arrive == self.end:
                 print("stop car\n")
-                self.send_action_signal(0)      # stop car
+                #self.send_action_signal(0)      # stop car
                 break
             else:
                 if self.path[arrive][0] > self.visited:
