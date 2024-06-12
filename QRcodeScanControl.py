@@ -1,8 +1,8 @@
 import socket
 import time
 
-IP = "192.168.64.119"
-PORT = 8000
+IP = "192.168.147.119"
+PORT = 80
 
 class QRcodeScanControl:
     def __init__(self):
@@ -18,25 +18,26 @@ class QRcodeScanControl:
     def connect_socket(self):
         try:
             self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            self.sock.settimeout(10)
             self.sock.connect((self.esp32_ip, self.esp32_port))
+            print("Successfully connected to ESP32")
+            return True
         except Exception as e:
             print("Error connecting to ESP32:", e)
             self.sock = None
+            return False
 
     def close_socket(self):
         if self.sock:
             self.sock.close()
             self.sock = None
-
-    def send_action_signal(self, action_signal):
-        self.send_signal("action", action_signal)
-
-    def send_turn_signal(self, turn_signal):
-        self.send_signal("turn", turn_signal)
+            print("Socket closed")
 
     def send_signal(self, command_type, signal):
+        while not self.connect_socket():
+            print("Retrying to connect...")
+            time.sleep(5)
         try:
-            self.connect_socket()
             request = f"GET /?{command_type}={signal} HTTP/1.1\r\nHost: {self.esp32_ip}\r\n\r\n"
             self.sock.sendall(request.encode())
             response = self.sock.recv(4096)
@@ -45,6 +46,12 @@ class QRcodeScanControl:
             print(f"Error sending {command_type} command to ESP32:", e)
         finally:
             self.close_socket()
+
+    def send_action_signal(self, action_signal):
+        self.send_signal("action", action_signal)
+
+    def send_turn_signal(self, turn_signal):
+        self.send_signal("turn", turn_signal)
 
     def get_path_settings(self):
         while True:
@@ -77,7 +84,6 @@ class QRcodeScanControl:
     
     def calculate_path(self):
         print("Calculated path : ")
-        # ask chatgpt for path
         self.path = {
             "A": [0, 0],
             "B": [1, 0],
@@ -100,14 +106,14 @@ class QRcodeScanControl:
         self.get_path_settings()
         self.calculate_path()
 
-        #self.send_action_signal(1)      # start car
+        self.send_action_signal(1)  # start car
 
         while True:
             arrive = input()
             print("arrive", arrive)
             if arrive == self.end:
                 print("stop car\n")
-                #self.send_action_signal(0)      # stop car
+                self.send_action_signal(0)  # stop car
                 break
             else:
                 if self.path[arrive][0] > self.visited:
