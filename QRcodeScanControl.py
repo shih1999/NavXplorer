@@ -100,14 +100,14 @@ class QRcodeScanControl:
         self.get_path_settings()
         self.calculate_path()
 
-        self.send_action_signal(0)      # start car
+        self.send_action_signal(1)      # start car
 
         while True:
             arrive = input()
             print("arrive", arrive)
             if arrive == self.end:
                 print("stop car\n")
-                self.send_action_signal(1)      # stop car
+                self.send_action_signal(0)      # stop car
                 break
             else:
                 if self.path[arrive][0] > self.visited:
