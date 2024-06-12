@@ -56,29 +56,29 @@ class QRcodeScanControl:
     def get_path_settings(self):
         while True:
             self.area = input("Enter area: ")
-            if len(self.area) == 1:
-                print("Error: Please scan the correct area qrcode.")
-            else:
+            if len(self.area) > 1:
                 print("area ok\n")
                 break
+            else:
+                print("Error: Please scan the correct area qrcode.")
         
         while True:
             self.start = input("Enter start: ")
-            if len(self.start) > 1:
-                print("Error: Please scan the correct start qrcode.")
-            else:
+            if len(self.start) == 1:
                 print("start ok\n")
                 break
+            else:
+                print("Error: Please scan the correct start qrcode.")
         
         while True:
             self.end = input("Enter end: ")
-            if len(self.start) > 1:
-                print("Error: Please scan the correct end qrcode.")
-            elif self.start == self.end:
+            if self.start == self.end:
                 print("Error: The start and end are the same.")
-            else:
+            elif len(self.end) == 1:
                 print("end ok\n")
                 break
+            else:
+                print("Error: Please scan the correct end qrcode.")
         
         print(f"from {self.start} to {self.end} in {self.area} \n")
     
