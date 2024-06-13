@@ -38,7 +38,7 @@ class QRcodeScanControl:
             print("Retrying to connect...")
             time.sleep(5)
         try:
-            request = f"GET /?{command_type}={signal} HTTP/1.1\r\nHost: {self.esp32_ip}\r\n\r\n"
+            request = f"GET GET /{command_type}?{command_type}={signal} HTTP/1.1\r\nHost: {self.esp32_ip}\r\n\r\n"
             self.sock.sendall(request.encode())
             response = self.sock.recv(4096)
             print(f"Received from ESP32: {response.decode()}")
