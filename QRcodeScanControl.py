@@ -3,6 +3,7 @@ import time
 
 IP = "192.168.147.119"
 PORT = 80
+DEBUG = True  # debug message signal
 
 class QRcodeScanControl:
     def __init__(self):
@@ -16,34 +17,44 @@ class QRcodeScanControl:
         self.sock = None
 
     def connect_socket(self):
-        try:
-            self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            self.sock.settimeout(10)
-            self.sock.connect((self.esp32_ip, self.esp32_port))
-            print("Successfully connected to ESP32")
-            return True
-        except Exception as e:
-            print("Error connecting to ESP32:", e)
-            self.sock = None
-            return False
+        for attempt in range(5):  # max retry times: 5
+            try:
+                self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                self.sock.settimeout(30)
+                self.sock.connect((self.esp32_ip, self.esp32_port))
+                if DEBUG:
+                    print("Successfully connected to ESP32")
+                return True
+            except Exception as e:
+                if DEBUG:
+                    print("Error connecting to ESP32:", e)
+                self.sock = None
+                time.sleep(5)
+        return False
 
     def close_socket(self):
         if self.sock:
             self.sock.close()
             self.sock = None
-            print("Socket closed")
+            if DEBUG:
+                print("Socket closed")
 
     def send_signal(self, command_type, signal):
         while not self.connect_socket():
-            print("Retrying to connect...")
+            if DEBUG:
+                print("Retrying to connect...")
             time.sleep(5)
         try:
-            request = f"GET GET /{command_type}?{command_type}={signal} HTTP/1.1\r\nHost: {self.esp32_ip}\r\n\r\n"
+            request = f"GET /{command_type}?{command_type}={signal} HTTP/1.1\r\nHost: {self.esp32_ip}\r\n\r\n"
+            if DEBUG:
+                print(f"Sending request: {request}")
             self.sock.sendall(request.encode())
             response = self.sock.recv(4096)
-            print(f"Received from ESP32: {response.decode()}")
+            if DEBUG:
+                print(f"Received from ESP32: {response.decode()}")
         except Exception as e:
-            print(f"Error sending {command_type} command to ESP32:", e)
+            if DEBUG:
+                print(f"Error sending {command_type} command to ESP32:", e)
         finally:
             self.close_socket()
 
@@ -81,7 +92,8 @@ class QRcodeScanControl:
                 print("Error: Please scan the correct end qrcode.")
         
         print(f"from {self.start} to {self.end} in {self.area} \n")
-    
+        
+    # forward: 0,  left: 1, right: 2
     def calculate_path(self):
         print("Calculated path : ")
         self.path = {
@@ -91,12 +103,12 @@ class QRcodeScanControl:
             "D": [3, 2],
             "E": [4, 0],
             "F": [5, 0],
-            "G": [6, 2],
+            "G": [6, 1],
             "H": [7, 0],
-            "I": [8, 0],
+            "I": [8, 2],
             "J": [9, 0],
-            "K": [10, 1],
-            "L": [11, 0],
+            "K": [10, 0],
+            "L": [11, 1],
             "M": [12, 0],
             "N": [13, 0]
         }
