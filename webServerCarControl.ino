@@ -12,10 +12,10 @@ const char* password = "Yvonne0813";
 #define ULTRA_LEFT 7      // Front-left
 #define ULTRA_RIGHT 40    // Front-right
 
-#define LEFT_MOTOR1 35
-#define LEFT_MOTOR2 36    
-#define RIGHT_MOTOR1 38   
-#define RIGHT_MOTOR2 37
+#define LEFT_MOTOR1 38
+#define LEFT_MOTOR2 37    
+#define RIGHT_MOTOR1 35   
+#define RIGHT_MOTOR2 36
 #define LEFT_MOTORen 21
 #define RIGHT_MOTORen 20
 
@@ -47,41 +47,36 @@ float machine_on = 0;   // 0: off, 1: on
 // create web server on port 8000
 WebServer server(8000);
 
-// Function prototypes
-void initializePins();
-void connectToWiFi();
-void startServer();
-void waitForMachineStart();
-void start_machine();
-void stop_machine();
-void detect();
-void check_back();
-void check_front();
-void wait();
-void check_dir();
-void send_ultra();
-float receive_ultra(int ultra_no);
-float ping_ultra(int ultra_no);
-void start_motor();
-void stop_motor();
-void turn_right(int duration);
-void turn_left(int duration);
-void handleCommand();
-void handleStatus();
-void handleRoot();
-
 void setup() {
-  // Initialize pins
-  initializePins();
-
   // Initialize Serial Monitor
   Serial.begin(9600);
 
+  // // Connect to Wi-Fi
+  // connectToWiFi();
+
+  // // Start the server
+  // startServer();
+
   // Connect to Wi-Fi
-  connectToWiFi();
+  WiFi.begin(ssid, password);
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(1000);
+    Serial.println("Connecting to WiFi...");
+  }
+  Serial.println("Connected to WiFi");
 
   // Start the server
-  startServer();
+  server.on("/", handleRoot);
+  server.on("/status", handleStatus);
+  server.on("/command", handleCommand);  // Handle incoming commands from Python
+  server.begin();
+  Serial.println("HTTP server started");
+
+  Serial.print("IP Address: ");
+  Serial.println(WiFi.localIP());
+
+   // Initialize pins
+  initializePins();
 
   // Wait for machine start signal
   waitForMachineStart();
@@ -141,6 +136,139 @@ void startServer() {
   Serial.println(WiFi.localIP());
 }
 
+/*
+The JavaScript code in handleRoot() fetches the status data from the "/status" route,
+it triggers the client-side request for status data,
+which in turn triggers the handleStatus() function to send the status data back to the client.
+*/
+
+// Handles the root ("/") route of the web server.
+void handleRoot() {
+  String message = "<html><body>";
+  message += "<h1>ESP32 Car Status</h1>";
+  message += "<p>Status: <span id='current_status'>" + current_status + "</span></p>";
+  message += "<p>Front distance: <span id='front_distance'>" + String(front_distance) + " cm</span></p>";
+  message += "<p>Back distance: <span id='back_distance'>" + String(back_distance) + " cm</span></p>";
+  message += "<p>Left distance: <span id='left_distance'>" + String(left_distance) + " cm</span></p>";
+  message += "<p>Right distance: <span id='right_distance'>" + String(right_distance) + " cm</span></p>";
+  message += "<script>";
+  message += "function fetchData() {";
+  message += "  fetch('/status').then(response => response.text()).then(data => {";
+  message += "    const parts = data.split(';');";
+  message += "    document.getElementById('current_status').innerText = parts[0];";
+  message += "    document.getElementById('front_distance').innerText = parts[1] + ' cm';";
+  message += "    document.getElementById('back_distance').innerText = parts[2] + ' cm';";
+  message += "    document.getElementById('left_distance').innerText = parts[3] + ' cm';";
+  message += "    document.getElementById('right_distance').innerText = parts[4] + ' cm';";
+  message += "  });";
+  message += "}";
+  message += "setInterval(fetchData, 1000);"; // Fetch data every second
+  message += "</script>";
+  message += "</body></html>";
+  server.send(200, "text/html", message);
+}
+
+// Handles requests for the status of the ESP32 car
+void handleStatus() {
+  String message = current_status + ";";
+  message += String(front_distance) + ";";
+  message += String(back_distance) + ";";
+  message += String(left_distance) + ";";
+  message += String(right_distance);
+  server.send(200, "text/plain", message);
+}
+
+// void handleCommand() {
+//   if (server.hasArg("turn")) {
+//     int turnSignal = server.arg("turn").toInt();
+//     Serial.print("Received turn signal: ");
+//     Serial.println(turnSignal);
+
+//     switch (turnSignal) {
+//       case 0:
+//         start_motor();
+//         break;
+//       case 1:
+//         turn_left(100);
+//         break;
+//       case 2:
+//         turn_right(100);
+//         break;
+//       case 3:
+//         // Add your backward or other logic here
+//         break;
+//       case 4:
+//         stop_motor();
+//         break;
+//       default:
+//         Serial.println("Unknown command");
+//         break;
+//     }
+
+//     server.send(200, "text/plain", "OK");
+//   } else {
+//     server.send(400, "text/plain", "Invalid Request");
+//   }
+// }
+
+// Handles commands received from the client (eg. python code)
+void handleCommand() {
+  if (server.hasArg("turn")) {
+    int turnSignal = server.arg("turn").toInt();
+    Serial.print("Received turn signal: ");
+    Serial.println(turnSignal);
+
+    switch (turnSignal) {
+      case 0:
+        current_status = "FORWARD";
+        Serial.println("///FORWARD///");
+        break;
+
+      case 1:
+        current_status = "TURN LEFT";
+        Serial.println("///TURN LEFT///");
+        turn_left(LEFT_TURN_MS);
+        break;
+
+      case 2:
+        current_status = "TURN RIGHT";
+        Serial.println("///TURN RIGHT///");
+        turn_right(RIGHT_TURN_MS);
+        break;
+
+      case 3:
+        current_status = "BACKWARD";
+        break;
+      
+      default:
+        Serial.println("Unknown command");
+        break;
+    }
+    server.send(200, "text/plain", "OK");
+  } 
+  else if (server.hasArg("action")) {
+    int actionSignal = server.arg("action").toInt();
+    Serial.print("Received action signal: ");
+    Serial.println(actionSignal);
+
+    switch (actionSignal) {
+      case 0:
+        machine_on = 0;   // stop car
+        break;
+      case 1:
+        machine_on = 1;   // start car
+        break;
+      default:
+        Serial.println("Unknown command");
+        break;
+   }
+   server.send(200, "text/plain", "OK");
+  }
+  else {
+    server.send(400, "text/plain", "Invalid Request");
+  }
+}
+
 void waitForMachineStart() {
   while (!machine_on) {
     Serial.println("Waiting for machine start signal ...");
@@ -149,18 +277,39 @@ void waitForMachineStart() {
 }
 
 void start_machine() {
-  current_status = "Started"
+  current_status = "Started";
   start_motor();
 }
 
 void stop_machine() {
   stop_motor();
-  current_status = "Terminated"
+  current_status = "Terminated";
 }
 
 void detect() {
   check_back();
   check_front();
+}
+
+void send_ultra() {
+  digitalWrite(ULTRA_TRIG, LOW);
+  delayMicroseconds(2);
+  digitalWrite(ULTRA_TRIG, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(ULTRA_TRIG, LOW);
+}
+
+float recieve_ultra(int ultra_no) { 
+  duration = pulseIn(ultra_no, HIGH, ULTRA_TIMEOUT);    // 30 ms timeout
+  distance = (duration*.0343)/2;
+  return distance;
+}
+
+float ping_ultra(int ultra_no) {
+  send_ultra();
+  recieve = recieve_ultra(ultra_no);
+  delay(100);
+  return recieve;
 }
 
 void check_back() {
@@ -222,27 +371,6 @@ void check_dir() {
   start_motor();
 }
 
-void send_ultra() {
-  digitalWrite(ULTRA_TRIG, LOW);
-  delayMicroseconds(2);
-  digitalWrite(ULTRA_TRIG, HIGH);
-  delayMicroseconds(10);
-  digitalWrite(ULTRA_TRIG, LOW);
-}
-
-float recieve_ultra(int ultra_no) { 
-  duration = pulseIn(ultra_no, HIGH, ULTRA_TIMEOUT);    // 30 ms timeout
-  distance = (duration*.0343)/2;
-  return distance;
-}
-
-float ping_ultra(int ultra_no) {
-  send_ultra();
-  recieve = recieve_ultra(ultra_no);
-  delay(100);
-  return recieve;
-}
-
 void start_motor() {
   Serial.println("=== START MOTOR ===");
 
@@ -289,101 +417,4 @@ void turn_left(int duration) {
   digitalWrite(RIGHT_MOTOR2, LOW);
 
   delay(duration);
-}
-
-// Handles commands received from the client (eg. python code)
-void handleCommand() {
-  if (server.hasArg("turn")) {
-    int turnSignal = server.arg("turn").toInt();
-    Serial.print("Received turn signal: ");
-    Serial.println(turnSignal);
-
-    switch (turnSignal) {
-      case 0:
-        current_status = "FORWARD";
-        break;
-
-      case 1:
-        current_status = "TURN LEFT";
-        turn_left(LEFT_TURN_MS);
-        break;
-
-      case 2:
-        current_status = "TURN RIGHT";
-        turn_right(RIGHT_TURN_MS);
-        break;
-
-      case 3:
-        current_status = "BACKWARD";
-        break;
-      
-      default:
-        Serial.println("Unknown command");
-        break;
-    }
-    server.send(200, "text/plain", "OK");
-  } 
-  else if (server.hasArg("action")) {
-    int actionSignal = server.arg("action").toInt();
-    Serial.print("Received action signal: ");
-    Serial.println(actionSignal);
-
-    switch (actionSignal) {
-      case 0:
-        machine_on = 0;   // stop car
-        break;
-      case 1:
-        machine_on = 1;   // start car
-        break;
-      default:
-        Serial.println("Unknown command");
-        break;
-   }
-   server.send(200, "text/plain", "OK");
-  }
-  else {
-    server.send(400, "text/plain", "Invalid Request");
-  }
-}
-
-/*
-The JavaScript code in handleRoot() fetches the status data from the "/status" route,
-it triggers the client-side request for status data,
-which in turn triggers the handleStatus() function to send the status data back to the client.
-*/
-
-// Handles requests for the status of the ESP32 car
-void handleStatus() {
-  String message = current_status + ";";
-  message += String(front_distance) + ";";
-  message += String(back_distance) + ";";
-  message += String(left_distance) + ";";
-  message += String(right_distance);
-  server.send(200, "text/plain", message);
-}
-
-// Handles the root ("/") route of the web server.
-void handleRoot() {
-  String message = "<html><body>";
-  message += "<h1>ESP32 Car Status</h1>";
-  message += "<p>Status: <span id='current_status'>" + current_status + "</span></p>";
-  message += "<p>Front distance: <span id='front_distance'>" + String(front_distance) + " cm</span></p>";
-  message += "<p>Back distance: <span id='back_distance'>" + String(back_distance) + " cm</span></p>";
-  message += "<p>Left distance: <span id='left_distance'>" + String(left_distance) + " cm</span></p>";
-  message += "<p>Right distance: <span id='right_distance'>" + String(right_distance) + " cm</span></p>";
-  message += "<script>";
-  message += "function fetchData() {";
-  message += "  fetch('/status').then(response => response.text()).then(data => {";
-  message += "    const parts = data.split(';');";
-  message += "    document.getElementById('current_status').innerText = parts[0];";
-  message += "    document.getElementById('front_distance').innerText = parts[1] + ' cm';";
-  message += "    document.getElementById('back_distance').innerText = parts[2] + ' cm';";
-  message += "    document.getElementById('left_distance').innerText = parts[3] + ' cm';";
-  message += "    document.getElementById('right_distance').innerText = parts[4] + ' cm';";
-  message += "  });";
-  message += "}";
-  message += "setInterval(fetchData, 1000);"; // Fetch data every second
-  message += "</script>";
-  message += "</body></html>";
-  server.send(200, "text/html", message);
 }
