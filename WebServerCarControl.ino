@@ -62,43 +62,20 @@ void setup() {
   // Start the server
   server.on("/", handleRoot);
   server.on("/status", handleStatus);
-  server.on("/command", handleCommand);  // Handle incoming commands from Python
+  server.on("/control", handleControl);   // Handle incoming commands from Python
   server.begin();
   Serial.println("HTTP server started");
 
   Serial.print("IP Address: ");
   Serial.println(WiFi.localIP());
 
-  // Initialize pins
-  initializePins();
-
-  // Wait for machine start signal
-  //waitForMachineStart();
-  
-  // Start motor after machine_on = 1
-  machine_on = 1;
-  start_machine();
-}
-
-void loop() {
-  if (!machine_on) {    // if machine_on = 0
-    stop_machine();
-    return;
-  }
-
-  detect();
-  // Handles incoming client requests on the server
-  server.handleClient();
-}
-
-void initializePins() {
   // Ultrasonic sensor pins
   pinMode(ULTRA_TRIG, OUTPUT);
   pinMode(ULTRA_BACK, INPUT);
   pinMode(ULTRA_FRONT, INPUT);  
   pinMode(ULTRA_LEFT, INPUT); 
   pinMode(ULTRA_RIGHT, INPUT);
-
+  
   // Motor pins
   pinMode(LEFT_MOTOR1, OUTPUT);
   pinMode(LEFT_MOTOR2, OUTPUT);
@@ -110,34 +87,17 @@ void initializePins() {
   // Motor speed
   analogWrite(LEFT_MOTORen, 100);
   analogWrite(RIGHT_MOTORen, 110);
+  
+  stop_motor();   // Ensure motors are stopped initially
 }
 
-void connectToWiFi() {
-  WiFi.begin(ssid, password);
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(1000);
-    Serial.println("Connecting to WiFi...");
+void loop() {
+  server.handleClient();
+  if (machine_on) {
+    detect();
   }
-  Serial.println("Connected to WiFi");
 }
 
-void startServer() {
-  server.on("/", handleRoot);
-  server.on("/status", handleStatus);
-  server.on("/command", handleCommand);
-  server.begin();
-  Serial.println("HTTP server started");
-  Serial.print("IP Address: ");
-  Serial.println(WiFi.localIP());
-}
-
-/*
-The JavaScript code in handleRoot() fetches the status data from the "/status" route,
-it triggers the client-side request for status data,
-which in turn triggers the handleStatus() function to send the status data back to the client.
-*/
-
-// Handles the root ("/") route of the web server.
 void handleRoot() {
   String message = "<html><body>";
   message += "<h1>ESP32 Car Status</h1>";
@@ -173,112 +133,26 @@ void handleStatus() {
   server.send(200, "text/plain", message);
 }
 
-// void handleCommand() {
-//   if (server.hasArg("turn")) {
-//     int turnSignal = server.arg("turn").toInt();
-//     Serial.print("Received turn signal: ");
-//     Serial.println(turnSignal);
-
-//     switch (turnSignal) {
-//       case 0:
-//         start_motor();
-//         break;
-//       case 1:
-//         turn_left(100);
-//         break;
-//       case 2:
-//         turn_right(100);
-//         break;
-//       case 3:
-//         // Add your backward or other logic here
-//         break;
-//       case 4:
-//         stop_motor();
-//         break;
-//       default:
-//         Serial.println("Unknown command");
-//         break;
-//     }
-
-//     server.send(200, "text/plain", "OK");
-//   } else {
-//     server.send(400, "text/plain", "Invalid Request");
-//   }
-// }
-
-// Handles commands received from the client (eg. python code)
-void handleCommand() {
-  if (server.hasArg("turn")) {
-    int turnSignal = server.arg("turn").toInt();
-    Serial.print("Received turn signal: ");
-    Serial.println(turnSignal);
-
-    switch (turnSignal) {
-      case 0:
-        current_status = "FORWARD";
-        Serial.println("///FORWARD///");
-        break;
-
-      case 1:
-        current_status = "TURN LEFT";
-        Serial.println("///TURN LEFT///");
-        turn_left(LEFT_TURN_MS);
-        break;
-
-      case 2:
-        current_status = "TURN RIGHT";
-        Serial.println("///TURN RIGHT///");
-        turn_right(RIGHT_TURN_MS);
-        break;
-
-      case 3:
-        current_status = "BACKWARD";
-        break;
-      
-      default:
-        Serial.println("Unknown command");
-        break;
+void handleControl() {
+  if (server.hasArg("action")) {
+    String action = server.arg("action");
+    if (action == "1") {
+      start_motor();
+    } else if (action == "0") {
+      stop_motor();
     }
-    server.send(200, "text/plain", "OK");
-  } 
-  else if (server.hasArg("action")) {
-    int actionSignal = server.arg("action").toInt();
-    Serial.print("Received action signal: ");
-    Serial.println(actionSignal);
-
-    switch (actionSignal) {
-      case 0:
-        machine_on = 0;   // stop car
-        break;
-      case 1:
-        machine_on = 1;   // start car
-        break;
-      default:
-        Serial.println("Unknown command");
-        break;
-   }
-   server.send(200, "text/plain", "OK");
+    server.send(200, "text/plain", "Action command received");
   }
-  else {
-    server.send(400, "text/plain", "Invalid Request");
+  
+  if (server.hasArg("turn")) {
+    String turn = server.arg("turn");
+    if (turn == "0") {
+      turn_left(LEFT_TURN_MS);
+    } else if (turn == "1") {
+      turn_right(RIGHT_TURN_MS);
+    }
+    server.send(200, "text/plain", "Turn command received");
   }
-}
-
-void waitForMachineStart() {
-  while (!machine_on) {
-    Serial.println("Waiting for machine start signal ...");
-    delay(1000);
-  }
-}
-
-void start_machine() {
-  current_status = "Started";
-  start_motor();
-}
-
-void stop_machine() {
-  stop_motor();
-  current_status = "Terminated";
 }
 
 void detect() {
@@ -328,10 +202,9 @@ void check_front() {
 }
 
 void wait() {
-  current_status = "Wait";
-  stop_motor();
-
   bool need_wait = true;
+  stop_motor();
+  current_status = "Wait";
   while (need_wait) {
     Serial.println("=== WAIT ===");
     delay(STOP_WAIT_MS);
@@ -342,6 +215,7 @@ void wait() {
   }
   delayMicroseconds(10);
   start_motor();
+  current_status = "Moving";
 }
 
 void check_dir() {
@@ -355,27 +229,27 @@ void check_dir() {
   Serial.println(right_distance);
   
   if (left_distance > right_distance){
-    current_status = "Duck Left";
-    turn_left(LEFT_DUCK_MS);
+    current_status = "Turn Left";
+    turn_left(LEFT_TURN_MS);
   }
   else {
-    current_status = "Duck Right";
-    turn_right(RIGHT_DUCK_MS);
+    current_status = "Turn Right";
+    turn_right(RIGHT_TURN_MS);
   }
-  delay(500);
+  delay(50);
   start_motor();
+  current_status = "Moving";
 }
 
 void start_motor() {
   Serial.println("=== START MOTOR ===");
-
   digitalWrite(LEFT_MOTOR1, HIGH);
   digitalWrite(LEFT_MOTOR2, LOW);
 
   digitalWrite(RIGHT_MOTOR1, HIGH);
   digitalWrite(RIGHT_MOTOR2, LOW);
-
   current_status = "Moving";
+  machine_on = 1;
 }
 
 void stop_motor() {
@@ -386,8 +260,8 @@ void stop_motor() {
 
   digitalWrite(RIGHT_MOTOR1, LOW);
   digitalWrite(RIGHT_MOTOR2, LOW);
-  
   current_status = "Stopped";
+  machine_on = 0;
 }
 
 void turn_right(int duration) {
