@@ -5,6 +5,9 @@
 const char* ssid = "Yvonne";
 const char* password = "Yvonne0813";
 
+// create web server on port 80
+WebServer server(80);
+
 // Define pin numbers
 #define ULTRA_TRIG 15
 #define ULTRA_BACK 11     // Back
@@ -23,16 +26,16 @@ const char* password = "Yvonne0813";
 
 // Define distance thresholds
 #define FRONT_DMAX 30
-#define BACK_DMAX 45
+#define BACK_DMAX 60
 
 // Define durations
-#define LEFT_DUCK_MS 10
-#define RIGHT_DUCK_MS 10
-#define LEFT_TURN_MS 30
-#define RIGHT_TURN_MS 30
-#define STOP_WAIT_MS 1000
+#define LEFT_DUCK_MS 8
+#define RIGHT_DUCK_MS 8
+#define LEFT_TURN_MS 20
+#define RIGHT_TURN_MS 20
+#define STOP_WAIT_MS 500
 
-#define ULTRA_TIMEOUT 30000
+#define ULTRA_TIMEOUT 300000
 
 // Global variables
 float recieve;
@@ -42,20 +45,11 @@ float left_distance, right_distance;
 
 // status variables
 String current_status = "Idle";
-float machine_on = 0;   // 0: off, 1: on
-
-// create web server on port 8000
-WebServer server(8000);
+int machine_on = 0;   // 0: off, 1: on
 
 void setup() {
   // Initialize Serial Monitor
   Serial.begin(9600);
-
-  // // Connect to Wi-Fi
-  // connectToWiFi();
-
-  // // Start the server
-  // startServer();
 
   // Connect to Wi-Fi
   WiFi.begin(ssid, password);
@@ -75,13 +69,14 @@ void setup() {
   Serial.print("IP Address: ");
   Serial.println(WiFi.localIP());
 
-   // Initialize pins
+  // Initialize pins
   initializePins();
 
   // Wait for machine start signal
-  waitForMachineStart();
+  //waitForMachineStart();
   
   // Start motor after machine_on = 1
+  machine_on = 1;
   start_machine();
 }
 
@@ -113,8 +108,8 @@ void initializePins() {
   pinMode(RIGHT_MOTORen, OUTPUT);
 
   // Motor speed
-  analogWrite(LEFT_MOTORen, 120);
-  analogWrite(RIGHT_MOTORen, 120);
+  analogWrite(LEFT_MOTORen, 100);
+  analogWrite(RIGHT_MOTORen, 110);
 }
 
 void connectToWiFi() {
@@ -367,7 +362,7 @@ void check_dir() {
     current_status = "Duck Right";
     turn_right(RIGHT_DUCK_MS);
   }
-  delay(1000);
+  delay(500);
   start_motor();
 }
 
