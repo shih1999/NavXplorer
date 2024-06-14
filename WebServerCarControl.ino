@@ -48,8 +48,7 @@ String current_status = "Idle";
 int machine_on = 0;   // 0: off, 1: on
 
 void setup() {
-  // Initialize Serial Monitor
-  Serial.begin(9600);
+  Serial.begin(115200);  // Ensure the baud rate matches with the serial monitor
 
   // Connect to Wi-Fi
   WiFi.begin(ssid, password);
@@ -62,7 +61,8 @@ void setup() {
   // Start the server
   server.on("/", handleRoot);
   server.on("/status", handleStatus);
-  server.on("/control", handleControl);   // Handle incoming commands from Python
+  server.on("/action", handleAction);
+  server.on("/turn", handleTurn);
   server.begin();
   Serial.println("HTTP server started");
 
@@ -133,25 +133,35 @@ void handleStatus() {
   server.send(200, "text/plain", message);
 }
 
-void handleControl() {
+void handleAction() {
   if (server.hasArg("action")) {
     String action = server.arg("action");
+    Serial.print("Action command received: ");
+    Serial.println(action);
     if (action == "1") {
       start_motor();
     } else if (action == "0") {
       stop_motor();
     }
     server.send(200, "text/plain", "Action command received");
+  } else {
+    server.send(400, "text/plain", "Bad Request");
   }
-  
+}
+
+void handleTurn() {
   if (server.hasArg("turn")) {
     String turn = server.arg("turn");
+    Serial.print("Turn command received: ");
+    Serial.println(turn);
     if (turn == "0") {
       turn_left(LEFT_TURN_MS);
     } else if (turn == "1") {
       turn_right(RIGHT_TURN_MS);
     }
     server.send(200, "text/plain", "Turn command received");
+  } else {
+    server.send(400, "text/plain", "Bad Request");
   }
 }
 
@@ -170,7 +180,7 @@ void send_ultra() {
 
 float recieve_ultra(int ultra_no) { 
   duration = pulseIn(ultra_no, HIGH, ULTRA_TIMEOUT);    // 30 ms timeout
-  distance = (duration*.0343)/2;
+  distance = (duration * 0.0343) / 2;
   return distance;
 }
 
@@ -181,23 +191,21 @@ float ping_ultra(int ultra_no) {
   return recieve;
 }
 
-void check_back() {
-  back_distance = ping_ultra(ULTRA_BACK);
-  Serial.print("Back distance: ");
-  Serial.print(back_distance);
-  Serial.println("");
-  if (back_distance > BACK_DMAX) {
-    wait();
-  }
-}
-
 void check_front() {
   front_distance = ping_ultra(ULTRA_FRONT);
   Serial.print("Front distance: ");
-  Serial.print(front_distance);
-  Serial.println("");
+  Serial.println(front_distance);
   if (front_distance < FRONT_DMAX) {
     check_dir();
+  }
+}
+
+void check_back() {
+  back_distance = ping_ultra(ULTRA_BACK);
+  Serial.print("Back distance: ");
+  Serial.println(back_distance);
+  if (back_distance > BACK_DMAX) {
+    wait();
   }
 }
 
@@ -213,7 +221,7 @@ void wait() {
       need_wait = false;
     }
   }
-  delayMicroseconds(10);
+  delay(50);
   start_motor();
   current_status = "Moving";
 }
@@ -228,11 +236,10 @@ void check_dir() {
   Serial.print("Right distance: ");
   Serial.println(right_distance);
   
-  if (left_distance > right_distance){
+  if (left_distance > right_distance) {
     current_status = "Turn Left";
     turn_left(LEFT_TURN_MS);
-  }
-  else {
+  } else {
     current_status = "Turn Right";
     turn_right(RIGHT_TURN_MS);
   }
