@@ -25,38 +25,31 @@ WebServer server(80);
 #define LED 3
 
 // Define distance thresholds
-#define FRONT_DMAX 30
+#define FRONT_DMAX 80
 #define BACK_DMAX 60
 
 // Define durations
-#define LEFT_DUCK_MS 8
-#define RIGHT_DUCK_MS 8
-#define LEFT_TURN_MS 20
-#define RIGHT_TURN_MS 20
+#define LEFT_DUCK_MS 2
+#define RIGHT_DUCK_MS 3
+#define LEFT_TURN_MS 300
+#define RIGHT_TURN_MS 300
 #define STOP_WAIT_MS 500
 
 #define ULTRA_TIMEOUT 300000
 
-// Global variables
-float recieve;
+float receive;
 float duration, distance;
 float front_distance, back_distance;
 float left_distance, right_distance;
-
-// status variables
 String current_status = "Idle";
 int machine_on = 0;   // 0: off, 1: on
 
 void setup() {
-  Serial.begin(115200);  // Ensure the baud rate matches with the serial monitor
+  // NOTE: Please ensure the baud rate matches with the serial monitor
+  Serial.begin(115200);
 
   // Connect to Wi-Fi
-  WiFi.begin(ssid, password);
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(1000);
-    Serial.println("Connecting to WiFi...");
-  }
-  Serial.println("Connected to WiFi");
+  connectToWiFi();
 
   // Start the server
   server.on("/", handleRoot);
@@ -86,16 +79,31 @@ void setup() {
 
   // Motor speed
   analogWrite(LEFT_MOTORen, 100);
-  analogWrite(RIGHT_MOTORen, 110);
+  analogWrite(RIGHT_MOTORen, 106);
   
   stop_motor();   // Ensure motors are stopped initially
 }
 
 void loop() {
   server.handleClient();
+  if (WiFi.status() != WL_CONNECTED) {
+    connectToWiFi();
+  }
   if (machine_on) {
     detect();
   }
+}
+
+void connectToWiFi() {
+  Serial.println("Connecting to WiFi...");
+  WiFi.begin(ssid, password);
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(1000);
+    Serial.print(".");
+  }
+  Serial.println("\nConnected to WiFi");
+  Serial.print("IP Address: ");
+  Serial.println(WiFi.localIP());
 }
 
 void handleRoot() {
@@ -154,9 +162,9 @@ void handleTurn() {
     String turn = server.arg("turn");
     Serial.print("Turn command received: ");
     Serial.println(turn);
-    if (turn == "0") {
+    if (turn == "1") {
       turn_left(LEFT_TURN_MS);
-    } else if (turn == "1") {
+    } else if (turn == "2") {
       turn_right(RIGHT_TURN_MS);
     }
     server.send(200, "text/plain", "Turn command received");
@@ -178,7 +186,7 @@ void send_ultra() {
   digitalWrite(ULTRA_TRIG, LOW);
 }
 
-float recieve_ultra(int ultra_no) { 
+float receive_ultra(int ultra_no) { 
   duration = pulseIn(ultra_no, HIGH, ULTRA_TIMEOUT);    // 30 ms timeout
   distance = (duration * 0.0343) / 2;
   return distance;
@@ -186,9 +194,9 @@ float recieve_ultra(int ultra_no) {
 
 float ping_ultra(int ultra_no) {
   send_ultra();
-  recieve = recieve_ultra(ultra_no);
+  receive = receive_ultra(ultra_no);
   delay(100);
-  return recieve;
+  return receive;
 }
 
 void check_front() {
@@ -238,10 +246,10 @@ void check_dir() {
   
   if (left_distance > right_distance) {
     current_status = "Turn Left";
-    turn_left(LEFT_TURN_MS);
+    turn_left(LEFT_DUCK_MS);
   } else {
     current_status = "Turn Right";
-    turn_right(RIGHT_TURN_MS);
+    turn_right(RIGHT_DUCK_MS);
   }
   delay(50);
   start_motor();
@@ -257,6 +265,7 @@ void start_motor() {
   digitalWrite(RIGHT_MOTOR2, LOW);
   current_status = "Moving";
   machine_on = 1;
+  delay(100);
 }
 
 void stop_motor() {
@@ -269,6 +278,7 @@ void stop_motor() {
   digitalWrite(RIGHT_MOTOR2, LOW);
   current_status = "Stopped";
   machine_on = 0;
+  delay(100);
 }
 
 void turn_right(int duration) {
