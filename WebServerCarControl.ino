@@ -29,10 +29,10 @@ WebServer server(80);
 #define BACK_DMAX 60
 
 // Define durations
-#define LEFT_DUCK_MS 2
-#define RIGHT_DUCK_MS 3
-#define LEFT_TURN_MS 300
+#define LEFT_TURN_MS 200
 #define RIGHT_TURN_MS 300
+#define LEFT_DUCK_MS 3
+#define RIGHT_DUCK_MS 3
 #define STOP_WAIT_MS 500
 
 #define ULTRA_TIMEOUT 300000
@@ -79,7 +79,7 @@ void setup() {
 
   // Motor speed
   analogWrite(LEFT_MOTORen, 100);
-  analogWrite(RIGHT_MOTORen, 106);
+  analogWrite(RIGHT_MOTORen, 100);
   
   stop_motor();   // Ensure motors are stopped initially
 }
