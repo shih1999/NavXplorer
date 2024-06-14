@@ -95,6 +95,7 @@ class QRcodeScanControl:
         
     # forward: 0,  left: 1, right: 2
     def calculate_path(self):
+        # ask OpenAI for shortest path
         print("Calculated path : ")
         self.path = {
             "A": [0, 0],
@@ -123,17 +124,18 @@ class QRcodeScanControl:
         while True:
             arrive = input()
             print("arrive", arrive)
-            if arrive == self.end:
-                print("stop car\n")
-                self.send_action_signal(0)  # stop car
-                break
-            else:
+            if arrive != self.end:
                 if self.path[arrive][0] > self.visited:
                     print("turn", self.path[arrive][1], "\n")
                     self.send_turn_signal(self.path[arrive][1])
                     self.visited = self.path[arrive][0]
                 else:
                     print("already passed")
+            else:
+                print("stop car\n")
+                self.send_action_signal(0)  # stop car
+                break
+
 
 if __name__ == "__main__":
     controller = QRcodeScanControl()
