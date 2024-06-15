@@ -2,19 +2,19 @@
 NavXplorer is a smart and automatic self-driven car designed for indoor navigation. Originally conceived as a redesigned drip stand solution, it aims to assist patients needing hands-free assistance and elderly individuals prone to getting lost in medical environments. However, it can also be applied to other complex indoor settings where GPS signals are ineffective.
 
 ## Table of Contents
-0 [Introduction](#0-introduction)
-1 [Features](#1-features)
-2 [Project Structure](#2-project-structure)
-3 [Hardware](#3-hardware) <br>
+0. [Introduction](#0-introduction)
+1. [Features](#1-features)
+2. [Project Structure](#2-project-structure)
+3. [Hardware](#3-hardware) <br>
    3.1 [Materials](#31-materials) <br>
    3.2 [Circuit Diagrams](#32-circuit-diagrams)
-4 [Software](#4-software) <br>
+4. [Software](#4-software) <br>
    4.1 [Arduino Code](#41-arduino-code) <br>
    4.2 [Python Code](#42-python-code)
-5 [Installation](#5-installation)
-6 [How to Run](#6-how-to-run)
-7 [References](#7-References)
-8 [Future Work](#8-Future-Work)
+5. [Installation](#5-installation)
+6. [How to Run](#6-how-to-run)
+7. [References](#7-References)
+8. [Future Work](#8-Future-Work)
 
 ## 0. Introduction
 [![Introduction Video](https://img.youtube.com/vi/5Z55hOexmpI/0.jpg)](https://www.youtube.com/watch?v=5Z55hOexmpI)
@@ -68,24 +68,30 @@ It reads QR codes during initial setup to determine the area, current position, 
 
 ### 6.1 Run Arduino Code
 
-1. Open Arduino IDE.
-2. Select **Files > Open > Find WebServerCarControl.ino > Click "Open".**
-3. Select **Tools > Board > ESP32 Arduino > Click "ESP32S3 Dev Module".**
-4. Modify Code: Change Wi-Fi settings to your own Wi-Fi credentials.
-5. Connect ESP32 to your computer using by USB cable.
-6. Click the upload (right arrow) button to upload the code.
-7. Wait for the upload to finish.
-8. Open Serial Monitor (baud rate set to 115200).
+1. Open Arduino IDE
+2. Select **Files > Open > Find WebServerCarControl.ino > Click "Open"**
+3. Select **Tools > Board > ESP32 Arduino > Click "ESP32S3 Dev Module"**
+4. Modify Code: Change Wi-Fi settings to your own Wi-Fi credentials <br>
+
+   <img src="https://github.com/shih1999/NavXplorer/assets/65940533/a382a86f-b8df-4a36-bbb0-62fbfded12da" width=40% height=40%>
+6. Connect ESP32 to your computer using by USB cable.
+7. Click the upload (right arrow) button to upload the code. <br>
+
+   <img src="https://github.com/shih1999/NavXplorer/assets/65940533/aeebbb4c-8600-474a-a21a-1c92b6261cc5" width=40% height=40%>
+9. Wait for the upload to finish.
+10. Open Serial Monitor (baud rate set to 115200).
 
 ### 6.2 Run Python Code
 
 1. Open **QRcodeScanControl.py**
-2. Modify Code: Change IP to the IP address obtained from the Serial Monitor.
-3. Navigate to the correct directory:
+2. Modify Code: Change IP to the IP address obtained from the Serial Monitor
+3. Navigate to the correct directory
+   
    ```bash
    cd path_to_directory
    ```
-4. Run
+5. Run
+   
    ```bash
    python QRcodeScanControl.py
    ```
