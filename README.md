@@ -28,7 +28,7 @@ NavXplorer is a smart and automatic self-driven car designed for indoor navigati
 
 ## Hardware
 ### Materials
-| Material | Number | Note
+| Component | Quantity | Note
 |:-|:-:|:-:|
 | ESP32-S3 Development Board | 1 | |
 | HC-SR04 Ultrasonic Distance Measurement Module | 4 | |
@@ -52,7 +52,7 @@ Manages the navigation logic of NavXplorer in collaboration with a handheld QR c
 <br>
 It reads QR codes during initial setup to determine the area, current position, and destination. During navigation, it continuously scans QR code inputs to update the car's current position and determine its subsequent direction.
 
-### Installation
+## Installation
 #### Download and Install Python
 1. Visit the [Python download page](https://www.python.org/downloads/).
 2. Select the appropriate version for your operating system.
@@ -69,12 +69,16 @@ It reads QR codes during initial setup to determine the area, current position, 
 ## Future Plans
 
 ## References
-- Arduino Official Website<br>
+- Arduino Official Website <br>
   https://www.arduino.cc/
 - Freenove ESP32 S3 WROOM Board <br>
   https://github.com/Freenove/Freenove_ESP32_S3_WROOM_Board
-- HC-SR04 Datasheet
-- L298N Datasheet
+- HC-SR04 Datasheet <br>
+  https://pdf1.alldatasheet.com/datasheet-pdf/view/1132203/ETC2/HC-SR04.html
+- L298N Datasheet <br>
+  https://pdf1.alldatasheet.com/datasheet-pdf/view/22440/STMICROELECTRONICS/L298N.html
+- ChatGPT - OpenAI <br>
+  https://chatgpt.com/
   
 - **Special Thanks** <br>
   TA 仲耘 for providing the AI path planning idea <br>
