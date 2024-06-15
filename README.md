@@ -1,33 +1,35 @@
 # NavXplorer
+NavXplorer is a smart and automatic self-driven car designed for indoor navigation. Originally conceived as a redesigned drip stand solution, it aims to assist patients needing hands-free assistance and elderly individuals prone to getting lost in medical environments. However, it can also be applied to other complex indoor settings where GPS signals are ineffective.
 
-NavXplorer is a smart and automatic self-driven car designed for indoor navigation purposes. Originally conceived as a redesigned drip stand solution for elderly individuals prone to getting lost and for patients needing hands-free assistance in medical facility settings, it aims to navigate in complex indoor environments where GPS signals are ineffective.
+## Table of Contents
+0. [Introduction](#0-introduction)
+1. [Features](#1-features)
+2. [Project Structure](#2-project-structure)
+3. [Hardware](#3-hardware) <br>
+   3.1 [Materials](#31-materials) <br>
+   3.2 [Circuit Diagrams](#32-circuit-diagrams)
+4. [Software](#4-software) <br>
+   4.1 [Arduino Code](#41-arduino-code) <br>
+   4.2 [Python Code](#42-python-code)
+5. [Installation](#5-installation)
+6. [How to Run](#6-how-to-run)
+7. [References](#7-References)
+8. [Future Work](#8-Future-Work)
 
-## Introduction
+## 0. Introduction
 [![Introduction Video](https://img.youtube.com/vi/5Z55hOexmpI/0.jpg)](https://www.youtube.com/watch?v=5Z55hOexmpI)
 
-## Features
+## 1. Features
 - **Automatic Navigation**: Navigates in indoor environments autonomously without relying on GPS.
 - **Obstacle Avoidance**: Equipped with ultrasonic sensors for detecting obstacles and to ensure safety.
 - **Patient Waiting**: Equipped with ultrasonic sensors for continuous monitoring of the user's presence.
 - **QR Code Integration**: Utilizes QR codes for initial setup, determining location, and updating navigation directions.
 - **Real-time Monitoring**: Provides a web server interface for monitoring the car's status and obstacle distances.
 
-## Table of Contents
-- Introduction
-- Features
-- Project Structure
-- Hardware
-- Software
-- Installation
-- How to Use
-- Future Plans
-- License
-- References
+## 2. Project Structure
 
-## Project Structure
-
-## Hardware
-### Materials
+## 3. Hardware
+### 3.1 Materials
 | Component | Quantity | Note
 |:-|:-:|:-:|
 | ESP32-S3 Development Board | 1 | |
@@ -39,20 +41,20 @@ NavXplorer is a smart and automatic self-driven car designed for indoor navigati
 | 12V Battery Power Supply | 1 | |
 | 2D Bluetooth Barcode Scanner | 1 | eg. AURORA XB-6208 |
 
-### Circuit Diagrams
+### 3.2 Circuit Diagrams
 
-## Software
-### Arduino Code
+## 4. Software
+### 4.1 Arduino Code
 Controls various hardware modules essential for the operation of NavXplorer, including ESP32 board, power supply, ultrasonic sensors and motors. It also establishes a server for communication with code running on remote computers.<br>
 <br>
 Additionally, it provides a simple web server page for real-time monitoring of the car's status and display distances detected by the ultrasonic sensors.
 
-### Python Code
+### 4.2 Python Code
 Manages the navigation logic of NavXplorer in collaboration with a handheld QR code scanner.<br>
 <br>
 It reads QR codes during initial setup to determine the area, current position, and destination. During navigation, it continuously scans QR code inputs to update the car's current position and determine its subsequent direction.
 
-## Installation
+## 5. Installation
 #### Download and Install Python
 1. Visit the [Python download page](https://www.python.org/downloads/).
 2. Select the appropriate version for your operating system.
@@ -64,11 +66,11 @@ It reads QR codes during initial setup to determine the area, current position, 
 2. Select the appropriate version for your operating system (Windows, Mac, Linux).
 3. Download and install the Arduino IDE by following the instructions provided on the page.
 
-## How to Use
+## 6. How to Run
 
-## Future Plans
+## 7. Future Plans
 
-## References
+## 8. References
 - Arduino Official Website <br>
   https://www.arduino.cc/
 - Freenove ESP32 S3 WROOM Board <br>
@@ -83,5 +85,3 @@ It reads QR codes during initial setup to determine the area, current position, 
 - **Special Thanks** <br>
   TA 仲耘 for providing the AI path planning idea <br>
   TA 致嘉 for providing the 2D Barcode Scanner idea
-
-## License
