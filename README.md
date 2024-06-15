@@ -4,32 +4,37 @@ NavXplorer is a smart and automatic self-driven car designed for indoor navigati
 
 ## Introduction
 
-
 ## Features
-
-- **Automatic Navigation**: NavXplorer navigates indoor environments autonomously without relying on GPS signals.
-- **Obstacle Avoidance**: Equipped with ultrasonic sensors for detecting obstacles and ensuring safe navigation.
-- **Patient Waiting**: Use ultrasonic sensors to detect whether the user is still following.
+- **Automatic Navigation**: Navigates in indoor environments autonomously without relying on GPS.
+- **Obstacle Avoidance**: Equipped with ultrasonic sensors for detecting obstacles and to ensure safety.
+- **Patient Waiting**: Equipped with ultrasonic sensors for continuous monitoring of the user's presence.
 - **QR Code Integration**: Utilizes QR codes for initial setup, determining location, and updating navigation directions.
 - **Real-time Monitoring**: Provides a web server interface for monitoring the car's status and obstacle distances.
 
 ## Table of Contents
 - Introduction
-- Introduction
 - Features
-- Arduino Code
-- Python Code
 - Project Structure
 - Hardware
-  - Circuit Diagrams
-  - Implementation Result
 - Software
-  - Arduino Code
-  - Python COde
 - Installation
-- Usage
+- How to Use
 - Future Plans
 - License
+- References
+
+## Hardware
+### Materials
+- ESP32-S3 Development Board
+- HC-SR04 Ultrasonic Distance Measurement Module x4
+- L298N Motor Driver Module for DC Motors x 1
+- DC3V-6V TT Gear Motor 1:48 x 2
+- Wheels x 2
+- W420 Ball Caster Wheel x 1
+- 12V Battery Power Supply
+- 2D Barcode Scanner (eg. AURORA XB-6208)
+
+### Circuit Diagrams
 
 ## Software
 ### Arduino code
@@ -37,3 +42,7 @@ Controls various hardware modules essential for the operation of NavXplorer, inc
 
 ### Python Code
 Manages the navigation logic of NavXplorer in collaboration with a handheld QR code scanner. It reads QR codes during initial setup to determine the area, current position, and destination. During navigation, it continuously scans QR code inputs to update the car's current position and determine its subsequent direction.
+
+## Refernces
+- Freenove ESP32 S3 WROOM Board
+  https://github.com/Freenove/Freenove_ESP32_S3_WROOM_Board
