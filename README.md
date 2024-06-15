@@ -26,14 +26,16 @@ NavXplorer is a smart and automatic self-driven car designed for indoor navigati
 
 ## Hardware
 ### Materials
-- ESP32-S3 Development Board
-- HC-SR04 Ultrasonic Distance Measurement Module * 4
-- L298N Motor Driver Module for DC Motors * 1
-- DC3V-6V TT Gear Motor 1:48 * 2
-- Wheels * 2
-- W420 Ball Caster Wheel * 1
-- 12V Battery Power Supply
-- 2D Barcode Scanner (eg. AURORA XB-6208)
+| Material | Number | Note
+|:-|:-:|:-:|
+| ESP32-S3 Development Board | 1 | |
+| HC-SR04 Ultrasonic Distance Measurement Module | 4 | |
+| L298N Motor Driver Module for DC Motors| 1 | |
+| DC3V-6V TT Gear Motor 1:48 | 2 | |
+| 65 * 27mm TPE Rubber Wheel | 2 | |
+| W420 Ball Caster Wheel | 1 | |
+| 12V Battery Power Supply | 1 | |
+| 2D Barcode Scanner | 1 | eg. AURORA XB-6208 |
 
 ### Circuit Diagrams
 
