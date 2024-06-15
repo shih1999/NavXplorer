@@ -2,19 +2,19 @@
 NavXplorer is a smart and automatic self-driven car designed for indoor navigation. Originally conceived as a redesigned drip stand solution, it aims to assist patients needing hands-free assistance and elderly individuals prone to getting lost in medical environments. However, it can also be applied to other complex indoor settings where GPS signals are ineffective.
 
 ## Table of Contents
-0. [Introduction](#0-introduction)
-1. [Features](#1-features)
-2. [Project Structure](#2-project-structure)
-3. [Hardware](#3-hardware) <br>
+0 [Introduction](#0-introduction)
+1 [Features](#1-features)
+2 [Project Structure](#2-project-structure)
+3 [Hardware](#3-hardware) <br>
    3.1 [Materials](#31-materials) <br>
    3.2 [Circuit Diagrams](#32-circuit-diagrams)
-4. [Software](#4-software) <br>
+4 [Software](#4-software) <br>
    4.1 [Arduino Code](#41-arduino-code) <br>
    4.2 [Python Code](#42-python-code)
-5. [Installation](#5-installation)
-6. [How to Run](#6-how-to-run)
-7. [References](#7-References)
-8. [Future Work](#8-Future-Work)
+5 [Installation](#5-installation)
+6 [How to Run](#6-how-to-run)
+7 [References](#7-References)
+8 [Future Work](#8-Future-Work)
 
 ## 0. Introduction
 [![Introduction Video](https://img.youtube.com/vi/5Z55hOexmpI/0.jpg)](https://www.youtube.com/watch?v=5Z55hOexmpI)
@@ -45,13 +45,11 @@ NavXplorer is a smart and automatic self-driven car designed for indoor navigati
 
 ## 4. Software
 ### 4.1 Arduino Code
-Controls various hardware modules essential for the operation of NavXplorer, including ESP32 board, power supply, ultrasonic sensors and motors. It also establishes a server for communication with code running on remote computers.<br>
-<br>
+Controls various hardware modules essential for the operation of NavXplorer, including ESP32 board, power supply, ultrasonic sensors and motors. It also establishes a server for communication with code running on remote computers.
 Additionally, it provides a simple web server page for real-time monitoring of the car's status and display distances detected by the ultrasonic sensors.
 
 ### 4.2 Python Code
-Manages the navigation logic of NavXplorer in collaboration with a handheld QR code scanner.<br>
-<br>
+Manages the navigation logic of NavXplorer in collaboration with a handheld QR code scanner.
 It reads QR codes during initial setup to determine the area, current position, and destination. During navigation, it continuously scans QR code inputs to update the car's current position and determine its subsequent direction.
 
 ## 5. Installation
@@ -68,7 +66,31 @@ It reads QR codes during initial setup to determine the area, current position, 
 
 ## 6. How to Run
 
-## 7. Future Plans
+### 6.1 Run Arduino Code
+
+1. Open Arduino IDE.
+2. Select **Files > Open > Find WebServerCarControl.ino > Click "Open".**
+3. Select **Tools > Board > ESP32 Arduino > Click "ESP32S3 Dev Module".**
+4. Modify Code: Change Wi-Fi settings to your own Wi-Fi credentials.
+5. Connect ESP32 to your computer using by USB cable.
+6. Click the upload (right arrow) button to upload the code.
+7. Wait for the upload to finish.
+8. Open Serial Monitor (baud rate set to 115200).
+
+### 6.2 Run Python Code
+
+1. Open **QRcodeScanControl.py**
+2. Modify Code: Change IP to the IP address obtained from the Serial Monitor.
+3. Navigate to the correct directory:
+   ```bash
+   cd path_to_directory
+   ```
+4. Run
+   ```bash
+   python QRcodeScanControl.py
+   ```
+
+## 7. Future Work
 
 ## 8. References
 - Arduino Official Website <br>
