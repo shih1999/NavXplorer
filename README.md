@@ -15,7 +15,10 @@ NavXplorer is a smart and automatic self-driven car designed for indoor navigati
 
 ## Table of Contents
 - Introduction
+- Introduction
 - Features
+- Arduino Code
+- Python Code
 - Project Structure
 - Hardware
   - Circuit Diagrams
