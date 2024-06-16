@@ -17,6 +17,7 @@ NavXplorer is a smart and automatic self-driven car designed for indoor navigati
 7. [References](#7-References)
 8. [Future Work](#8-Future-Work)
 9. [Our Team](#9-our-team)
+9. [Our Team](#9-our-team)
 
 ## 0. Introduction
 [![Introduction Video](https://img.youtube.com/vi/5Z55hOexmpI/0.jpg)](https://www.youtube.com/watch?v=5Z55hOexmpI)
@@ -134,10 +135,12 @@ Still writing ...
 ## 9. Our Team
 
 #### Team Members
+#### Team Members
 - **Yvonne Chen** (GitHub: [@yvonne-chen-0813](https://github.com/yvonne-chen-0813))
 - **Shih-Jieh Chen** (GitHub: [@shih1999](https://github.com/shih1999))
 
 
+#### Special Thanks
 #### Special Thanks
 
 - **TA 仲耘** for providing the AI path planning idea
