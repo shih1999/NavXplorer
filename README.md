@@ -16,6 +16,7 @@ NavXplorer is a smart and automatic self-driven car designed for indoor navigati
 6. [How to Run](#6-how-to-run)
 7. [References](#7-References)
 8. [Future Work](#8-Future-Work)
+9. [Tean](#9-team)
 
 ## 0. Introduction
 [![Introduction Video](https://img.youtube.com/vi/5Z55hOexmpI/0.jpg)](https://www.youtube.com/watch?v=5Z55hOexmpI)
@@ -124,10 +125,21 @@ Manages NavXplorer's navigation logic in conjunction with a handheld QR code sca
   https://pdf1.alldatasheet.com/datasheet-pdf/view/22440/STMICROELECTRONICS/L298N.html
 - ChatGPT - OpenAI <br>
   https://chatgpt.com/
-  
-- **Special Thanks** <br>
-  TA 仲耘 for providing the AI path planning idea <br>
-  TA 致嘉 for providing the 2D Barcode Scanner idea
 
-  ## 8. Future Work
+## 8. Future Work
+
+## 9. Our Team
+
+### Team Members
+- **Yvonne Chen** (GitHub: [@yvonne-chen-0813](https://github.com/yvonne-chen-0813))
+- 
+- **Shih-Jieh Chen** (GitHub: [@shih1999](https://github.com/shih1999))
+
+
+### Special Thanks
+
+- **TA 仲耘** for providing the AI path planning idea
+
+- **TA 致嘉** for providing the 2D Barcode Scanner idea
+
 
