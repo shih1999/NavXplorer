@@ -14,9 +14,8 @@ NavXplorer is a smart and automatic self-driven car designed for indoor navigati
    4.3 [Code Logic and Functionality](#43-code-logic-and-functionality)
 5. [Installation](#5-installation)
 6. [How to Run](#6-how-to-run)
-7. [References](#7-References)
-8. [Future Work](#8-Future-Work)
-9. [Our Team](#9-our-team)
+7. [Future Work](#7-Future-Work)
+8. [References](#8-References)
 9. [Our Team](#9-our-team)
 
 ## 0. Introduction
@@ -118,6 +117,9 @@ Still writing ...
    ```bash
    python QRcodeScanControl.py
    ```
+
+## 8. Future Work
+
 ## 7. References
 - Arduino Official Website <br>
   https://www.arduino.cc/
@@ -130,17 +132,13 @@ Still writing ...
 - ChatGPT - OpenAI <br>
   https://chatgpt.com/
 
-## 8. Future Work
-
 ## 9. Our Team
 
-#### Team Members
 #### Team Members
 - **Yvonne Chen** (GitHub: [@yvonne-chen-0813](https://github.com/yvonne-chen-0813))
 - **Shih-Jieh Chen** (GitHub: [@shih1999](https://github.com/shih1999))
 
 
-#### Special Thanks
 #### Special Thanks
 
 - **TA 仲耘** for providing the AI path planning idea
