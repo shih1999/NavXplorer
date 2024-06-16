@@ -10,7 +10,8 @@ NavXplorer is a smart and automatic self-driven car designed for indoor navigati
    3.2 [Circuit Diagrams](#32-circuit-diagrams)
 4. [Software](#4-software) <br>
    4.1 [Arduino Code](#41-arduino-code) <br>
-   4.2 [Python Code](#42-python-code)
+   4.2 [Python Code](#42-python-code) <br>
+   4.3 [Code Logic and Functionality](#43-code-logic-and-functionality)
 5. [Installation](#5-installation)
 6. [How to Run](#6-how-to-run)
 7. [References](#7-References)
@@ -20,13 +21,28 @@ NavXplorer is a smart and automatic self-driven car designed for indoor navigati
 [![Introduction Video](https://img.youtube.com/vi/5Z55hOexmpI/0.jpg)](https://www.youtube.com/watch?v=5Z55hOexmpI)
 
 ## 1. Features
-- **Automatic Navigation**: Navigates in indoor environments autonomously without relying on GPS.
-- **Obstacle Avoidance**: Equipped with ultrasonic sensors for detecting obstacles and to ensure safety.
-- **Patient Waiting**: Equipped with ultrasonic sensors for continuous monitoring of the user's presence.
-- **QR Code Integration**: Utilizes QR codes for initial setup, determining location, and updating navigation directions.
+- **Automatic Navigation**:  Navigates autonomously in indoor environments.
+- **Obstacle Avoidance**: Equipped with ultrasonic sensors to detecting obstacles to for safety.
+- **User Presence Detection**: Uses ultrasonic sensors to continuously monitor the user's presence.
+- **QR Code Integration**: Utilizes QR codes for initial setup, location determination, and navigation updates.
 - **Real-time Monitoring**: Provides a web server interface for monitoring the car's status and obstacle distances.
 
 ## 2. Project Structure
+```bash
+NavXplorer/
+│
+├── WebServerCarControl/
+│   └── WebServerCarControl.ino
+├── QRcodeScanControl/
+│   └── QRcodeScanControl.py
+├── ModuleTest/
+│   ├── MotorTest/
+│   │   └── MotorTest.ino
+│   ├── UltrasonicTest/
+│   │   └── UltrasonicTest.ino
+│   └── README.md  # This README explains the testing code
+└── README.md  # This README explains the main project
+```
 
 ## 3. Hardware
 ### 3.1 Materials
@@ -44,25 +60,27 @@ NavXplorer is a smart and automatic self-driven car designed for indoor navigati
 ### 3.2 Circuit Diagrams
 
 ## 4. Software
+Here's a revised version of your software section:
+
 ### 4.1 Arduino Code
-Controls various hardware modules essential for the operation of NavXplorer, including ESP32 board, power supply, ultrasonic sensors and motors. It also establishes a server for communication with code running on remote computers.
-Additionally, it provides a simple web server page for real-time monitoring of the car's status and display distances detected by the ultrasonic sensors.
+Controls essential hardware modules for the operation of NavXplorer, including the ESP32 board, power supply, ultrasonic sensors, and motors. It establishes a server for remote communication and provides a web page for real-time monitoring of the car's status and ultrasonic sensor detection results.
 
 ### 4.2 Python Code
-Manages the navigation logic of NavXplorer in collaboration with a handheld QR code scanner.
-It reads QR codes during initial setup to determine the area, current position, and destination. During navigation, it continuously scans QR code inputs to update the car's current position and determine its subsequent direction.
+Manages NavXplorer's navigation logic in conjunction with a handheld QR code scanner. During initial setup, it reads QR codes to determine the area, current position, and destination. Throughout navigation, it continuously scans QR code inputs to update it's position and determine the next direction.
+
+### 4.3 Code Logic and Functionality
 
 ## 5. Installation
-#### Download and Install Python
-1. Visit the [Python download page](https://www.python.org/downloads/).
-2. Select the appropriate version for your operating system.
-3. Download and install Python by following the instructions provided on the page.
-4. Make sure to check the box that says "Add Python to PATH" during the installation process.
-
 #### Download and Install Arduino IDE
-1. Visit the [Arduino IDE download page](https://support.arduino.cc/hc/en-us/articles/360019833020-Download-and-install-Arduino-IDE).
-2. Select the appropriate version for your operating system (Windows, Mac, Linux).
-3. Download and install the Arduino IDE by following the instructions provided on the page.
+1. Visit the [Arduino IDE download page](https://support.arduino.cc/hc/en-us/articles/360019833020-Download-and-install-Arduino-IDE)
+2. Select the appropriate version for your operating system (Windows, Mac, Linux)
+3. Download and install the Arduino IDE by following the instructions provided on the page
+   
+#### Download and Install Python
+1. Visit the [Python download page](https://www.python.org/downloads/)
+2. Select the appropriate version for your operating system
+3. Download and install Python by following the instructions provided on the page
+4. Make sure to check the box that says "Add Python to PATH" during the installation process
 
 ## 6. How to Run
 
@@ -74,12 +92,12 @@ It reads QR codes during initial setup to determine the area, current position, 
 4. Modify Code: Change Wi-Fi settings to your own Wi-Fi credentials <br>
 
    <img src="https://github.com/shih1999/NavXplorer/assets/65940533/a382a86f-b8df-4a36-bbb0-62fbfded12da" width=40% height=40%>
-6. Connect ESP32 to your computer using by USB cable.
-7. Click the upload (right arrow) button to upload the code. <br>
+6. Connect ESP32 to your computer using by USB cable
+7. Click the upload (right arrow) button to upload the code <br>
 
    <img src="https://github.com/shih1999/NavXplorer/assets/65940533/aeebbb4c-8600-474a-a21a-1c92b6261cc5" width=40% height=40%>
-9. Wait for the upload to finish.
-10. Open Serial Monitor (baud rate set to 115200).
+9. Wait for the upload to finish
+10. Open Serial Monitor (baud rate set to 115200)
 
 ### 6.2 Run Python Code
 
@@ -95,10 +113,7 @@ It reads QR codes during initial setup to determine the area, current position, 
    ```bash
    python QRcodeScanControl.py
    ```
-
-## 7. Future Work
-
-## 8. References
+## 7. References
 - Arduino Official Website <br>
   https://www.arduino.cc/
 - Freenove ESP32 S3 WROOM Board <br>
@@ -113,3 +128,6 @@ It reads QR codes during initial setup to determine the area, current position, 
 - **Special Thanks** <br>
   TA 仲耘 for providing the AI path planning idea <br>
   TA 致嘉 for providing the 2D Barcode Scanner idea
+
+  ## 8. Future Work
+
