@@ -60,6 +60,12 @@ NavXplorer/
 
 ### 3.2 Circuit Diagrams
 
+<img src="https://github.com/shih1999/NavXplorer/assets/65940533/235454eb-2537-4431-9955-4506fc3fcfef" width=40% height=40%> <br>
+Red : 5V positive terminal <br>
+Black : Ground negative terminal <br>
+Blue : Ultrasonic Trigger <br>
+Pink : Ultrasonic Echo
+
 ## 4. Software
 
 ### 4.1 Arduino Code
@@ -118,9 +124,12 @@ Still writing ...
    python QRcodeScanControl.py
    ```
 
-## 8. Future Work
-
-## 7. References
+## 7. Future Work
+- [ ]
+- [ ]
+- [ ]
+  
+##  8. References
 - Arduino Official Website <br>
   https://www.arduino.cc/
 - Freenove ESP32 S3 WROOM Board <br>
@@ -133,16 +142,11 @@ Still writing ...
   https://chatgpt.com/
 
 ## 9. Our Team
-
 #### Team Members
 - **Yvonne Chen** (GitHub: [@yvonne-chen-0813](https://github.com/yvonne-chen-0813))
 - **Shih-Jieh Chen** (GitHub: [@shih1999](https://github.com/shih1999))
 
 
 #### Special Thanks
-
 - **TA 仲耘** for providing the AI path planning idea
-
 - **TA 致嘉** for providing the 2D Barcode Scanner idea
-
-
