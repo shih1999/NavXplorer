@@ -125,9 +125,11 @@ Still writing ...
    ```
 
 ## 7. Future Work
-- [ ]
-- [ ]
-- [ ]
+- [ ] Transition to Soldered Circuit Board for Stability
+- [ ] Redesign Machine Exterior for Improved Fit and Weight
+- [ ] Reconfigure Battery Placement and Develop a Custom Power Switch
+- [ ] Upgrade to Advanced Motor Types for Enhanced Control
+- [ ] Purchase and Integrate OpenAI API
   
 ##  8. References
 - Arduino Official Website <br>
@@ -143,8 +145,8 @@ Still writing ...
 
 ## 9. Our Team
 #### Team Members
-- **Yvonne Chen** (GitHub: [@yvonne-chen-0813](https://github.com/yvonne-chen-0813))
-- **Shih-Jieh Chen** (GitHub: [@shih1999](https://github.com/shih1999))
+- **Yvonne Chen** [yvonne-chen-0813](https://github.com/yvonne-chen-0813)
+- **Shih-Jieh Chen** [shih1999](https://github.com/shih1999)
 
 
 #### Special Thanks
